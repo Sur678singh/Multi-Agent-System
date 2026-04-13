@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent AI System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v10"/>
+                        <path d="M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24"/>
+                        <path d="M1 12h6m6 0h10"/>
+                        <path d="M4.22 19.78l4.24-4.24m7.08-7.08l4.24-4.24"/>
+                    </svg>
+                </div>
+                <h1>Multi-Agent AI System</h1>
+            </div>
+            <p class="subtitle">Powered by LangGraph &amp; ChatGroq</p>
+        </header>
+
+        <!-- Input Section -->
+        <section class="input-section">
+            <div class="input-wrapper">
+                <label for="question">Enter Your Research Question</label>
+                <div class="input-group">
+                    <input type="text" id="question" placeholder="e.g., Generate a research on AI?" value="Generate a research on AI?">
+                    <button id="startBtn" onclick="startProcess()">
+                        <span class="btn-text">Start Research</span>
+                        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workflow Visualization -->
+        <section class="workflow-section">
+            <h2 class="section-title">Agent Workflow</h2>
+            
+            <div class="workflow-graph">
+                <!-- Start Node -->
+                <div class="node start-node" id="startNode">
+                    <div class="node-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <circle cx="12" cy="12" r="8"/>
+                        </svg>
+                    </div>
+                    <span>START</span>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-arrow"></div>
+                </div>
+
+                <!-- Research Agent -->
+                <div class="node agent-node" id="researchNode">
+                    <div class="node-status"></div>
+                    <div class="node-icon research-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                    </div>
+                    <div class="node-content">
+                        <h3>Research Agent</h3>
+                        <p>Tavily Search</p>
+                    </div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-arrow"></div>
+                </div>
+
+                <!-- Writer Agent -->
+                <div class="node agent-node" id="writerNode">
+                    <div class="node-status"></div>
+                    <div class="node-icon writer-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+                            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+                            <path d="M2 2l7.586 7.586"/>
+                            <circle cx="11" cy="11" r="2"/>
+                        </svg>
+                    </div>
+                    <div class="node-content">
+                        <h3>Writer Agent</h3>
+                        <p>QWEN 3 (32B)</p>
+                    </div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-arrow"></div>
+                </div>
+
+                <!-- Reviewer Agent -->
+                <div class="node agent-node" id="reviewerNode">
+                    <div class="node-status"></div>
+                    <div class="node-icon reviewer-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                    </div>
+                    <div class="node-content">
+                        <h3>Reviewer Agent</h3>
+                        <p>Quality Check</p>
+                    </div>
+                </div>
+
+                <div class="connector">
+                    <div class="connector-line"></div>
+                    <div class="connector-arrow"></div>
+                </div>
+
+                <!-- End Node -->
+                <div class="node end-node" id="endNode">
+                    <div class="node-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                            <circle cx="12" cy="12" r="8"/>
+                            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span>END</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agent Outputs -->
+        <section class="outputs-section">
+            <h2 class="section-title">Agent Outputs</h2>
+            
+            <div class="outputs-grid">
+                <!-- Research Output -->
+                <div class="output-card" id="researchOutput">
+                    <div class="output-header">
+                        <div class="output-icon research-bg">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
+                        </div>
+                        <div class="output-title">
+                            <h3>Research Results</h3>
+                            <span class="output-status" id="researchStatus">Waiting...</span>
+                        </div>
+                    </div>
+                    <div class="output-content" id="researchContent">
+                        <div class="placeholder">
+                            <p>Research data will appear here after the agent completes its search...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Writer Output -->
+                <div class="output-card" id="writerOutput">
+                    <div class="output-header">
+                        <div class="output-icon writer-bg">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+                                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+                                <path d="M2 2l7.586 7.586"/>
+                            </svg>
+                        </div>
+                        <div class="output-title">
+                            <h3>Written Content</h3>
+                            <span class="output-status" id="writerStatus">Waiting...</span>
+                        </div>
+                    </div>
+                    <div class="output-content" id="writerContent">
+                        <div class="placeholder">
+                            <p>The writer agent will compose a detailed answer based on research...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reviewer Output -->
+                <div class="output-card final-output" id="reviewerOutput">
+                    <div class="output-header">
+                        <div class="output-icon reviewer-bg">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 11l3 3L22 4"/>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                            </svg>
+                        </div>
+                        <div class="output-title">
+                            <h3>Final Answer</h3>
+                            <span class="output-status" id="reviewerStatus">Waiting...</span>
+                        </div>
+                    </div>
+                    <div class="output-content" id="reviewerContent">
+                        <div class="placeholder">
+                            <p>The reviewer agent will refine and finalize the answer...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- State Visualization -->
+        <section class="state-section">
+            <h2 class="section-title">System State</h2>
+            <div class="state-container">
+                <pre id="stateDisplay">{
+    "question": "",
+    "research": "",
+    "writer": "",
+    "final_answer": ""
+}</pre>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Multi-Agent System using LangGraph, Tavily Search &amp; ChatGroq Qwen 3</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
