@@ -98,9 +98,9 @@ Which IPL team has the most followers on social media?
 
 ```
 ├── main.py              # Main execution file
-├── tools.py             # Web search & scraping tools
-├── graph.py             # LangGraph workflow
-├── models.py            # Pydantic schemas
+├── multiagent.py             # Web search & scraping tools
+├── multiagentfrontend.py             # LangGraph workflow
+├── public-->HTML/CSS,JavaScript       # website flow        
 ├── .env                 # API keys
 └── README.md
 ```
