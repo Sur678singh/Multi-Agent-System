@@ -17,7 +17,10 @@ async function startProcess() {
         updateStatus("researchStatus", "Searching...");
 
         try {
-            const res = await fetch("http://127.0.0.1:8000/ask", {
+            // 🔥 Wake up Render server (important)
+            await fetch("https://multi-agent-system-5289.onrender.com/");
+
+            const res = await fetch("https://multi-agent-system-5289.onrender.com/ask", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -25,11 +28,15 @@ async function startProcess() {
                 body: JSON.stringify({ question: question })
             });
 
+            // ❗ Error handling
+            if (!res.ok) {
+                throw new Error("API Error");
+            }
+
             const data = await res.json();
 
             // ================= RESEARCH =================
-            const cleanData = cleanResearch(data.research);
-            updateContent("researchContent", cleanData);
+            updateContent("researchContent", data.research);
             updateStatus("researchStatus", "Completed ✅");
 
             setTimeout(() => {
@@ -53,7 +60,7 @@ async function startProcess() {
                     // Update state
                     updateState(
                         question,
-                        cleanData,
+                        data.research,
                         data.writer,
                         data.final_answer
                     );
@@ -74,25 +81,17 @@ async function startProcess() {
 // ================= FORMAT CONTENT =================
 function formatContent(text) {
 
+    // 🔥 Fix: object → string
     if (typeof text !== "string") {
         text = JSON.stringify(text, null, 2);
     }
 
     return text
-        .replace(/^# (.*$)/gim, '<h2 style="color:#3b82f6;">$1</h2>')
+        .replace(/^# (.*$)/gim, '<h2 style="color:#3b82f6;margin-top:10px;">$1</h2>')
         .replace(/^## (.*$)/gim, '<h3 style="color:#8b5cf6;">$1</h3>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong style="color:#22c55e;">$1</strong>')
+        .replace(/\n{2,}/g, "<br><br>")
         .replace(/\n/g, '<br>');
-}
-
-
-// ================= CLEAN TAVILY DATA =================
-function cleanResearch(data) {
-    if (!data || !data.results) return "No research data found";
-
-    return data.results.map((item, i) => {
-        return `🔹 ${i + 1}. ${item.title}\n${item.content}`;
-    }).join("\n\n");
 }
 
 

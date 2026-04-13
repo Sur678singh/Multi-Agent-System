@@ -38,7 +38,7 @@ class MultiAgent(TypedDict):
 def create_research(state:MultiAgent):
     query=state['question']
     response=search.invoke(query)
-    return {'research':response}
+    return {'research':str(response)}
 
 # second function
 def create_writer(state:MultiAgent):
@@ -75,6 +75,11 @@ graph.add_edge('writer','reviewer')
 
 agent=graph.compile()
 
+# ===== ROOT ROUTE =====
+@app.get("/")
+def home():
+    return {"message": "Multi-Agent AI Running 🚀"}
+
 # ================= API =================
 class Query(BaseModel):
     question: str
@@ -88,8 +93,3 @@ def ask(q: Query):
         "writer": result.get("writer", ""),
         "final_answer": result.get("final_answer", "")
     }
-
-# /*********************************query********************************************
-intial_state={'question':'Generate a research on AI?'}
-final=agent.invoke(intial_state)
-# print(final['final_answer'])
