@@ -6,6 +6,8 @@ from langchain_tavily import TavilySearch
 from typing import TypedDict
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 # *****************************load Env File*************************************
 load_dotenv()
@@ -20,7 +22,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 # make llm
-llm=ChatGroq(model='openai/gpt-oss-20b')
+llm=ChatGroq(model='openai/gpt-oss-120b')
+
+# *********************************Serve Frontend UI****************************
+app.mount("/public",StaticFiles(directory='public'),name='public')
+# get request from server
+@app.get("/")
+def serve_frontend():
+    return FileResponse("public/index.html")
+
 
 # ************************************Tool***************************************
 # dearch tool
@@ -74,11 +84,6 @@ graph.add_edge('research','writer')
 graph.add_edge('writer','reviewer')
 
 agent=graph.compile()
-
-# ===== ROOT ROUTE =====
-@app.get("/")
-def home():
-    return {"message": "Multi-Agent AI Running 🚀"}
 
 # ================= API =================
 class Query(BaseModel):
