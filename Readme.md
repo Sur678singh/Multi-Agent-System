@@ -1,4 +1,4 @@
-# 🧠 Smart Web Research Agent (LangGraph + Groq)
+# 🧠 Smart Multi Agent System(LangGraph + Groq)
 
 An intelligent **AI-powered research assistant** built using **LangGraph**, **LangChain**, and **Groq LLMs**.
 This agent can generate search queries, fetch real-time web data, filter relevant information, and produce structured, high-quality summaries.
